@@ -2,10 +2,35 @@
 //
 
 #include <iostream>
+#include <string>
+using namespace std;
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	int nums[3];
+
+	int i = 0;
+
+	while (i < 3) {
+		string s;
+		cout << "Enter number " << i + 1 << ":" << endl;
+		
+		try {
+			cin >> s;
+			nums[i] = stoi(s);
+			i++;
+		} catch (const exception& e) {
+			cerr << "Error: " << e.what() << endl;
+			cerr << "Try again.";
+		}
+	}
+
+	cout << "Numbers:";
+	for (int n : nums)
+		cout << " " << n;
+	cout << endl;
+
+	cout << "Result: (" << nums[0] << "*" << nums[1] << ")+" << nums[2] << " = " << nums[0]*nums[1] + nums[2] << endl;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
