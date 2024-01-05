@@ -1,5 +1,4 @@
-// 01-multiplier.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+// 01-multiplier.cpp
 
 #include <iostream>
 #include <string>
@@ -7,39 +6,38 @@ using namespace std;
 
 int main()
 {
+	// Declare number array
 	int nums[3];
 
+	// Initialize index
 	int i = 0;
 
+	// Loop until `i` is 3 (until the `nums` array is filled)
 	while (i < 3) {
-		string s;
-		cout << "Enter number " << i + 1 << ":" << endl;
-		
+		string str;
+		cout << "Enter number " << i + 1 << ": "; // Prompt user
+		cin >> str; // Get input
+		cout << endl; // New line
+
 		try {
-			cin >> s;
-			nums[i] = stoi(s);
-			i++;
+			nums[i] = stoi(str); // Convert and place in array
+			i++; // If it was successful, go to next number
 		} catch (const exception& e) {
+			// If there was an error, print it out and try again
 			cerr << "Error: " << e.what() << endl;
 			cerr << "Try again.";
 		}
 	}
 
+	// Print all numbers
 	cout << "Numbers:";
 	for (int n : nums)
 		cout << " " << n;
 	cout << endl;
 
-	cout << "Result: (" << nums[0] << "*" << nums[1] << ")+" << nums[2] << " = " << nums[0]*nums[1] + nums[2] << endl;
+	// Calculate result
+	int result = nums[0] * nums[1] + nums[2];
+
+	// Print result
+	cout << "Result: (" << nums[0] << "*" << nums[1] << ")+" << nums[2] << " = " << result << endl;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
