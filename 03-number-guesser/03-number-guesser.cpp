@@ -31,9 +31,9 @@ int main()
 		<< " guesses" << endl;
 
 	for (int i = 0; i < num_of_guesses; i++) {
+		cout << endl;
 		cout << "Guess " << i + 1 << ": ";
 		cin >> guessed_num; // No error handling
-		cout << endl;
 
 		// Check if the number was correct
 		if (guessed_num == correct_num)
@@ -41,9 +41,15 @@ int main()
 			cout << "Correct!" << endl; // Congratulate and break out of loop
 			break;
 		}
-		else
+		else if (guessed_num > correct_num)
 		{
-			cout << "Wrong, try again." << endl;
+			cout << "Too high." << endl;
+		}
+		else if (guessed_num < correct_num)
+		{
+			cout << "Too low." << endl;
 		}
 	}
+
+	cout << "The number was " << correct_num << endl;
 }
