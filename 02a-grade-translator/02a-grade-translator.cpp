@@ -44,5 +44,5 @@ int main()
 	}
 
 	// Print score and grade
-	cout << "With a score of " << score << ", you got a grade of '" << grade << "'" << endl;
+	cout << "With a score of \"" << score << "\", you got a grade of \"" << grade << "\"" << endl;
 }
