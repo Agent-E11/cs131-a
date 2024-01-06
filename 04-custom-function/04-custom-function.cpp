@@ -4,12 +4,32 @@
 #include <string>
 using namespace std;
 
+string get_grade(int score)
+{
+	// Make sure score is in the proper range
+	if (score > 100 || score < 0) {
+		return "X"; // "X" means there was an error
+	}
+
+	// Convert to letter grade
+	if (score >= 90) {
+		return "A";
+	} else if (score >= 80) {
+		return "B";
+	} else if (score >= 70) {
+		return "C";
+	} else if (score >= 60) {
+		return "D";
+	} else {
+		return "F";
+	}
+}
+
 int main()
 {
 	// Declare variables
 	string input;
 	int score;
-	string grade;
 
 	// Get raw input
 	cout << "What was your score? (0 to 100): ";
@@ -24,25 +44,14 @@ int main()
 		return 1;
 	}
 
-	// Make sure score is in the proper range
-	if (score > 100 || score < 0) {
-		cerr << "Your score must be in between 0 and 100." << endl; // No extra credit or negative scores allowed
-		return 2;
-	}
-
-	// Convert to letter grade
-	if (score >= 90) {
-		grade = "A";
-	} else if (score >= 80) {
-		grade = "B";
-	} else if (score >= 70) {
-		grade = "C";
-	} else if (score >= 60) {
-		grade = "D";
-	} else {
-		grade = "F";
-	}
+	// Convert score to grade
+	string grade = get_grade(score);
 
 	// Print score and grade
-	cout << "With a score of \"" << score << "\", you got a grade of \"" << grade << "\"" << endl;
+	if (grade == "X") {
+		cerr << "There was an error converting \"" << input << "\" to a grade" << endl;
+	}
+	else {
+		cout << "With a score of \"" << score << "\", you got a grade of \"" << grade << "\"" << endl;
+	}
 }
