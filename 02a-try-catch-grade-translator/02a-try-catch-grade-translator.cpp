@@ -3,8 +3,18 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+#include <stdexcept>
 
 using namespace std;
+
+void err_negative(int n) {
+    try {
+		int _ = 1 / max(0, n + 1);
+    }
+    catch (exception& e) {
+        throw exception("negative number");
+    }
+}
 
 int main()
 {
@@ -33,8 +43,8 @@ int main()
     // Make sure score is in the proper range
 
     try { // sqrt errors if passed a value below 0 FIXME: This is not true
-        _ = 1 / sqrt(score);
-        _ = 1 / sqrt(101 - score);
+        err_negative(score);
+        err_negative(101 - score);
 
         cout << "in try block";
     }
