@@ -29,6 +29,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "24-01-31_sorting", "24-01-3
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "24-02-07_game", "24-02-07_game\24-02-07_game.vcxproj", "{4515531E-7F4A-477B-A094-009974F5C51B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06-file-io-grade-translator", "06-file-io-grade-translator\06-file-io-grade-translator.vcxproj", "{171C94DA-8125-411A-8630-7660EACC7C65}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -141,6 +143,14 @@ Global
 		{4515531E-7F4A-477B-A094-009974F5C51B}.Release|x64.Build.0 = Release|x64
 		{4515531E-7F4A-477B-A094-009974F5C51B}.Release|x86.ActiveCfg = Release|Win32
 		{4515531E-7F4A-477B-A094-009974F5C51B}.Release|x86.Build.0 = Release|Win32
+		{171C94DA-8125-411A-8630-7660EACC7C65}.Debug|x64.ActiveCfg = Debug|x64
+		{171C94DA-8125-411A-8630-7660EACC7C65}.Debug|x64.Build.0 = Debug|x64
+		{171C94DA-8125-411A-8630-7660EACC7C65}.Debug|x86.ActiveCfg = Debug|Win32
+		{171C94DA-8125-411A-8630-7660EACC7C65}.Debug|x86.Build.0 = Debug|Win32
+		{171C94DA-8125-411A-8630-7660EACC7C65}.Release|x64.ActiveCfg = Release|x64
+		{171C94DA-8125-411A-8630-7660EACC7C65}.Release|x64.Build.0 = Release|x64
+		{171C94DA-8125-411A-8630-7660EACC7C65}.Release|x86.ActiveCfg = Release|Win32
+		{171C94DA-8125-411A-8630-7660EACC7C65}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -156,7 +156,7 @@ void save() {
 void load() {
 	char input;
 	input_file.open(save_directory + save_file);
-	// TODO: Is this unnecessary?
+	// TODO: Is this section unnecessary?
 	input_file.clear();
 	input_file.seekg(0);
 	if (input_file.fail()) {
