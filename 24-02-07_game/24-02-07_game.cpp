@@ -5,6 +5,7 @@
 #include <conio.h>
 #include <string>
 #include <fstream>
+#include <cmath>
 
 using namespace std;
 
@@ -74,14 +75,14 @@ int main() {
 		}
 
 		if (y < 0)
-			y = HEIGHT - 1;
-		if (y > HEIGHT - 1)
 			y = 0;
+		if (y > HEIGHT - 1)
+			y = HEIGHT - 1;
 
 		if (x < 0)
-			x = WIDTH - 1;
-		if (x > WIDTH - 1)
 			x = 0;
+		if (x > WIDTH - 1)
+			x = WIDTH - 1;
 
 		display(board);
 	}
@@ -91,10 +92,28 @@ void display(char board[HEIGHT][WIDTH]) {
 	system("cls");
 	for (int i = 0; i < HEIGHT; i++) {
 		for (int j = 0; j < WIDTH; j++) {
+
 			if (i == y && j == x) {
 				cout << PLAYER;
 			}
 			else if ((abs(i - y) + abs(j - x) <= PLAYER_VISION)) {
+				// Draw walls
+				if ((i == 0 && j == 0)
+					|| (i == 0 && j == WIDTH - 1)
+					|| (i == HEIGHT - 1 && j == 0)
+					|| (i == HEIGHT - 1 && j == WIDTH - 1)
+					) {
+					cout << '+';
+					continue;
+				}
+				if (i == 0 || i == HEIGHT - 1) {
+					cout << '-';
+					continue;
+				}
+				if (j == 0 || j == WIDTH - 1) {
+					cout << '|';
+					continue;
+				}
 				cout << board[i][j];
 			}
 			else {
