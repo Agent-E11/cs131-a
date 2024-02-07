@@ -21,9 +21,9 @@ string get_grade(int score)
         return "C";
     } else if (score >= 60) {
         return "D";
-    } else {
-        return "F";
     }
+
+	return "F";
 }
 
 int main()

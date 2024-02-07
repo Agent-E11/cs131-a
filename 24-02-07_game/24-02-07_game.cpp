@@ -96,7 +96,9 @@ void display(char board[HEIGHT][WIDTH]) {
 			if (i == y && j == x) {
 				cout << PLAYER;
 			}
-			else if ((abs(i - y) + abs(j - x) <= PLAYER_VISION)) {
+			else if (
+				pow(abs(i - y), 2) + pow(abs(j - x), 2) <= pow(PLAYER_VISION, 2)
+			) {
 				// Draw walls
 				if ((i == 0 && j == 0)
 					|| (i == 0 && j == WIDTH - 1)
@@ -154,6 +156,7 @@ void save() {
 void load() {
 	char input;
 	input_file.open(save_directory + save_file);
+	// TODO: Is this unnecessary?
 	input_file.clear();
 	input_file.seekg(0);
 	if (input_file.fail()) {
