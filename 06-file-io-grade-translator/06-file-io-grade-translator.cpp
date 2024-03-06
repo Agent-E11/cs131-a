@@ -8,7 +8,7 @@ using namespace std;
 string get_grade(int score);
 
 int main() {
-	string files_dir = "C:\\Users\\eamon.burns.BELTEC\\coding\\cs131-a\\04-custom-function\\io-files\\";
+	string files_dir = "C:\\Users\\Public\\cs131-io-files\\";
 	string out_file_name = "translated-grades.txt";
 	string in_file_name = "raw-grades.txt";
 	ofstream output_file;
