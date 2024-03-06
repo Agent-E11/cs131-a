@@ -52,7 +52,11 @@ std::vector<std::string> split_words(std::string s) {
 	return words;
 }
 
-void print_vec(std::vector<std::string> v) {
+/// <summary>
+/// Prints vector<string> to stdout
+/// </summary>
+/// <param name="v">Vector to be printed</param>
+static void print_vec(std::vector<std::string> v) {
 	std::cout << "[ ";
 	for (int i = 0; i < v.size(); i++)
 		std::cout << v[i] << ", ";
@@ -64,4 +68,16 @@ int main() {
 	auto v = split_words(s);
 
 	print_vec(v);
+
+	int count = 0;
+	for (int i = 0; i < v.size(); i++) {
+		int c = count_vowels(v[i]);
+
+		if (c == -1)
+			exit(1);
+
+		count += c;
+	}
+
+	std::cout << "Total vowels: " << count << std::endl;
 }
