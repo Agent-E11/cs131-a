@@ -52,12 +52,13 @@ int main() {
 		std::cout << "Account\tBalance\n";
 		std::cout << "------------------------\n";
 		display_accts(accts);
-		std::cout << "(A)dd\t(D)eposit\t(R)emove\t(Q)uit\n\n> ";
+		std::cout << "(A)dd\t(D)eposit\t(W)ithdraw\t(T)ransfer\t(R)emove\t(Q)uit\n\n> ";
 		// user input
 		std::cin >> choice;
 		choice = tolower(choice);
 
-		std::string name;
+		std::string name1;
+		std::string name2;
 		double balance;
 		double amount;
 		bool found;
@@ -74,17 +75,22 @@ int main() {
 
 			accts.push_back(new_acct);
 
-			msg = std::format("Added acount: {}", new_acct.name);
+			msg = std::format("Added acount `{}`", new_acct.name);
 			break;
 		case 'd':
 			std::cout << "Name of account to deposit to: ";
-			std::cin >> name;
-			std::cout << "Deposit amount: ";
+			std::cin >> name1;
+			std::cout << "Amount to deposit: $";
 			std::cin >> amount;
+
+			if (amount < 0) {
+				msg = "Cannot deposit a negative amount (use (W)ithdraw)";
+				break;
+			}
 
 			found = false;
 			for (BankAcct &acct : accts) {
-				if (acct.name == name) {
+				if (acct.name == name1) {
 					found = true;
 					acct.deposit(amount);
 					break;
@@ -92,20 +98,52 @@ int main() {
 			}
 
 			if (found) {
-				msg = std::format("Deposited {} to account {}", amount, name);
+				msg = std::format("Deposited `${:.2f}` to account `{}`", amount, name1);
 			}
 			else {
-				msg = std::format("Could not find account with name `{}`", name);
+				msg = std::format("Could not find account with name `{}`", name1);
+			}
+			break;
+
+		case 'w':
+			std::cout << "Name of account to withdraw from: ";
+			std::cin >> name1;
+
+			std::cout << "Amount to withdraw: $";
+			std::cin >> amount;
+
+			if (amount < 0) {
+				msg = "Cannot withdraw a negative amount (use (D)eposit)";
+				break;
 			}
 
+			found = false;
+			for (BankAcct& acct : accts) {
+				if (acct.name == name1) {
+					found = true;
+					acct.deposit(-amount);
+					break;
+				}
+			}
+
+			if (found) {
+				msg = std::format("Withdrew `${:.2f}` from account `{}`", amount, name1);
+			}
+			else {
+				msg = std::format("Could not find account with name `{}`", name1);
+			}
 			break;
+
+		case 't':
+			break;
+
 		case 'r':
 			std::cout << "Name of account to remove: ";
-			std::cin >> name;
+			std::cin >> name1;
 
 			found = false;
 			for (int i = 0; i < accts.size(); i++) {
-				if (accts[i].name == name) {
+				if (accts[i].name == name1) {
 					found = true;
 					accts.erase(accts.begin() + i);
 					break;
@@ -113,16 +151,20 @@ int main() {
 			}
 			
 			if (found) {
-				msg = std::format("Removed acount: {}", name);
+				msg = std::format("Removed acount `{}`", name1);
 			}
 			else {
-				msg = std::format("Could not find account with name `{}`", name);
+				msg = std::format("Could not find account with name `{}`", name1);
 			}
 			break;
+
 		case 'q':
 			// Quit program
 			std::cout << "Quitting... \n";
 			break;
+
+		default:
+			msg = "Invalid option";
 		}
 	} while (choice != 'q');
 }
@@ -134,5 +176,5 @@ void display_accts(std::vector<BankAcct> accts) {
 }
 
 void BankAcct::print() {
-	std::cout << this->name << "\t" << this->get_balance() << "\n";
+	std::cout << this->name << "\t$" << this->get_balance() << std::endl;
 }
