@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 /// <summary>
 /// Counts the number of vowels in a word
@@ -12,7 +13,7 @@ int count_vowels(std::string word) {
 	const char vowels[] = { 'a', 'e', 'i', 'o', 'u' };
 	int count = 0;
 	for (int i = 0; i < word.length(); i++) {
-		if (word[i] == ' ') return -1;
+		if (std::isspace(word[i])) return -1;
 		const char* pos = std::find(std::begin(vowels), std::end(vowels), word[i]);
 		if (pos != std::end(vowels)) {
 			count++;
@@ -21,19 +22,46 @@ int count_vowels(std::string word) {
 	return count;
 }
 
-int main() {
-	int c;
+std::vector<std::string> split_words(std::string s) {
+	std::vector<std::string> words;
+	std::string word = "";
 
-	c = count_vowels("test");
-	std::cout << "test: " << c << std::endl;
-	c = count_vowels("tree");
-	std::cout << "tree: " << c << std::endl;
-	c = count_vowels("6357");
-	std::cout << "6357: " << c << std::endl;
-	c = count_vowels("floozle");
-	std::cout << "floozle: " << c << std::endl;
-	c = count_vowels("faster");
-	std::cout << "faster: " << c << std::endl;
-	c = count_vowels("two words");
-	std::cout << "two words: " << c << std::endl;
+	for (int i = 0; i < s.length(); i++) {
+		std::cout << "s[i] = `" << s[i] << "`\t";
+		if (std::isspace(s[i])) {
+			std::cout << "is space\t";
+			if (word.empty()) {
+				std::cout << "is empty\t" << std::endl;
+				continue;
+			}
+			else {
+				std::cout << "no empty\t";
+				words.push_back(word);
+				word = "";
+			}
+		}
+		else {
+			word += s[i];
+			std::cout << "no space\t" << "w: " << word << "\t";
+		}
+		std::cout << std::endl;
+	}
+	// Add last word
+	if (!word.empty()) words.push_back(word);
+
+	return words;
+}
+
+void print_vec(std::vector<std::string> v) {
+	std::cout << "[ ";
+	for (int i = 0; i < v.size(); i++)
+		std::cout << v[i] << ", ";
+	std::cout << "]" << std::endl;
+}
+
+int main() {
+	std::string s = "This is a    long test    of this thi  ng     ";
+	auto v = split_words(s);
+
+	print_vec(v);
 }
