@@ -80,6 +80,7 @@ static void print_vec(std::vector<std::string> v) {
 
 int main() {
 	// Get input
+	std::cout << "Enter a sentence: ";
 	std::string input;
 	std::getline(std::cin, input);
 
