@@ -63,6 +63,9 @@ int main() {
 		double amount;
 		bool found;
 		BankAcct new_acct;
+
+		BankAcct *transfer_from_acct = nullptr;
+		BankAcct *transfer_to_acct = nullptr;
 		switch (choice) {
 		case 'a':
 			// Add account
@@ -135,6 +138,49 @@ int main() {
 			break;
 
 		case 't':
+			std::cout << "Name of account to transfer from: ";
+			std::cin >> name1;
+
+			found = false;
+			for (BankAcct& acct : accts) {
+				if (acct.name == name1) {
+					found = true;
+					transfer_from_acct = &acct;
+				}
+			}
+			if (!found) {
+				msg = std::format("Could not find account with name `{}`", name1);
+				break;
+			}
+
+			std::cout << "Name of account to transfer to: ";
+			std::cin >> name2;
+
+			if (name1 == name2) {
+				msg = "Cannot transfer to and from the same account";
+				break;
+			}
+
+			found = false;
+			for (BankAcct& acct : accts) {
+				if (acct.name == name2) {
+					found = true;
+					transfer_to_acct = &acct;
+				}
+			}
+			if (!found) {
+				msg = std::format("Could not find account with name `{}`", name2);
+				break;
+			}
+
+			std::cout << std::format("Amount to transfer from `{}` to `{}`: $", name1, name2);
+			std::cin >> amount;
+
+			transfer_from_acct->deposit(-amount);
+			transfer_to_acct->deposit(amount);
+
+			msg = std::format("Transferred `${:.2f}` from `{}` to `{}`", amount, name1, name2);
+
 			break;
 
 		case 'r':
