@@ -26,7 +26,10 @@ private:
 
 void display_accts(std::vector<BankAcct> accts);
 
+static int find_account(std::vector<BankAcct> accts, std::string name);
+
 int main() {
+	const char COULD_NOT_FIND_ERR[] = "Could not find account with name `{}`";
 
     std::cout.setf(std::ios::fixed);
     std::cout.setf(std::ios::showpoint);
@@ -62,6 +65,7 @@ int main() {
 		double balance;
 		double amount;
 		bool found;
+		int pos;
 		BankAcct new_acct;
 
 		BankAcct *transfer_from_acct = nullptr;
@@ -72,17 +76,25 @@ int main() {
 
 			std::cout << "Name of new account: ";
 			std::cin >> new_acct.name;
-			std::cout << "Starting balance: ";
+			std::cout << "Starting balance: $";
 			std::cin >> balance;
 			new_acct.deposit(balance);
 
 			accts.push_back(new_acct);
 
-			msg = std::format("Added acount `{}`", new_acct.name);
+			msg = std::format("Added acount `{}` with starting balance `${}`", new_acct.name, balance);
 			break;
 		case 'd':
 			std::cout << "Name of account to deposit to: ";
 			std::cin >> name1;
+
+			pos = find_account(accts, name1);
+
+			if (pos == -1) {
+				msg = std::format(COULD_NOT_FIND_ERR, name1);
+				break;
+			}
+
 			std::cout << "Amount to deposit: $";
 			std::cin >> amount;
 
@@ -91,26 +103,22 @@ int main() {
 				break;
 			}
 
-			found = false;
-			for (BankAcct &acct : accts) {
-				if (acct.name == name1) {
-					found = true;
-					acct.deposit(amount);
-					break;
-				}
-			}
+			accts[pos].deposit(amount);
 
-			if (found) {
-				msg = std::format("Deposited `${:.2f}` to account `{}`", amount, name1);
-			}
-			else {
-				msg = std::format("Could not find account with name `{}`", name1);
-			}
+			msg = std::format("Deposited `${:.2f}` to account `{}`", amount, name1);
+
 			break;
 
 		case 'w':
 			std::cout << "Name of account to withdraw from: ";
 			std::cin >> name1;
+
+			pos = find_account(accts, name1);
+
+			if (pos == -1) {
+				msg = std::format(COULD_NOT_FIND_ERR, name1);
+				break;
+			}
 
 			std::cout << "Amount to withdraw: $";
 			std::cin >> amount;
@@ -120,38 +128,22 @@ int main() {
 				break;
 			}
 
-			found = false;
-			for (BankAcct& acct : accts) {
-				if (acct.name == name1) {
-					found = true;
-					acct.deposit(-amount);
-					break;
-				}
-			}
+			accts[pos].deposit(-amount);
 
-			if (found) {
-				msg = std::format("Withdrew `${:.2f}` from account `{}`", amount, name1);
-			}
-			else {
-				msg = std::format("Could not find account with name `{}`", name1);
-			}
+			msg = std::format("Withdrew `${:.2f}` from account `{}`", amount, name1);
 			break;
 
 		case 't':
 			std::cout << "Name of account to transfer from: ";
 			std::cin >> name1;
 
-			found = false;
-			for (BankAcct& acct : accts) {
-				if (acct.name == name1) {
-					found = true;
-					transfer_from_acct = &acct;
-				}
-			}
-			if (!found) {
-				msg = std::format("Could not find account with name `{}`", name1);
+			pos = find_account(accts, name1);
+
+			if (pos == -1) {
+				msg = std::format(COULD_NOT_FIND_ERR, name1);
 				break;
 			}
+			transfer_from_acct = &accts[pos];
 
 			std::cout << "Name of account to transfer to: ";
 			std::cin >> name2;
@@ -161,17 +153,13 @@ int main() {
 				break;
 			}
 
-			found = false;
-			for (BankAcct& acct : accts) {
-				if (acct.name == name2) {
-					found = true;
-					transfer_to_acct = &acct;
-				}
-			}
-			if (!found) {
-				msg = std::format("Could not find account with name `{}`", name2);
+			pos = find_account(accts, name2);
+
+			if (pos == -1) {
+				msg = std::format(COULD_NOT_FIND_ERR, name2);
 				break;
 			}
+			transfer_to_acct = &accts[pos];
 
 			std::cout << std::format("Amount to transfer from `{}` to `{}`: $", name1, name2);
 			std::cin >> amount;
@@ -187,20 +175,14 @@ int main() {
 			std::cout << "Name of account to remove: ";
 			std::cin >> name1;
 
-			found = false;
-			for (int i = 0; i < accts.size(); i++) {
-				if (accts[i].name == name1) {
-					found = true;
-					accts.erase(accts.begin() + i);
-					break;
-				}
-			}
+			pos = find_account(accts, name1);
 			
-			if (found) {
+			if (pos != -1) {
+				accts.erase(accts.begin() + pos);
 				msg = std::format("Removed acount `{}`", name1);
 			}
 			else {
-				msg = std::format("Could not find account with name `{}`", name1);
+				msg = std::format(COULD_NOT_FIND_ERR, name1);
 			}
 			break;
 
@@ -213,6 +195,19 @@ int main() {
 			msg = "Invalid option";
 		}
 	} while (choice != 'q');
+}
+
+/// <summary>
+/// Finds a BankAcct in a vector when given a name
+/// </summary>
+/// <param name="accts">Accounts to search</param>
+/// <param name="name">Name of BankAcct to search for</param>
+/// <returns>The index of the found BankAcct, will be -1 if it cannot be found</returns>
+static int find_account(std::vector<BankAcct> accts, std::string name) {
+	for (int i = 0; i < accts.size(); i++) {
+		if (accts[i].name == name) return i;
+	}
+	return -1;
 }
 
 void display_accts(std::vector<BankAcct> accts) {
