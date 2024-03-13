@@ -1,32 +1,95 @@
 // 24-02-07_game.cpp
 
 #include <iostream>
-#include <Windows.h>
-#include <conio.h>
-#include <string>
 #include <fstream>
+#include <conio.h>
+#include <locale>
+#include <vector>
+
+#include <string>
 #include <cmath>
+#include <Windows.h>
 
 using namespace std;
 
 const int HEIGHT = 10;
 const int WIDTH = 20;
+
 const int PLAYER_VISION = 5;
-const char EMPTY = ' ';
 const char PLAYER = 'A';
 const char HEALTH = '$';
+
+const char WALLS[] = "|-+";
+const char EMPTY = ' ';
+
 const char UP = 'w';
 const char LEFT = 'a';
 const char DOWN = 's';
 const char RIGHT = 'd';
+
 const char QUIT = 'q';
 const char SAVE = 'o';
 const char LOAD = 'p';
 
 string save_file = "save_file.txt";
-string save_directory = "C:\\Users\\eamon.burns.BELTEC\\coding\\cs131-a\\24-02-07_game\\game_saves\\";
+string save_directory = "C:\\cs131-game\\game_saves\\";
 ofstream output_file;
 ifstream input_file;
+
+// Objects
+
+// Position
+struct Pos {
+	int x;
+	int y;
+};
+
+// Player and enemies
+class Entity {
+public:
+	Entity(int x, int y) {
+		this->p.x = x;
+		this->p.y = y;
+	}
+	Pos get_pos() {
+		return this->p;
+	}
+	void set_pos(Pos p) {
+		this->p = p;
+	}
+private:
+	Pos p;
+};
+
+// Board
+class Board {
+public:
+	Board(int width, int height) {
+		this->width = width;
+		this->height = height;
+		for (int i = 0; i < this->height; i++) {
+			vector<char> row;
+			for (int i = 0; i < this->width; i++) {
+				row.push_back('.');
+			}
+			this->board.push_back(row);
+		}
+	}
+	int get_height() {
+		return this->height;
+	}
+	int get_width() {
+		return this->width;
+	}
+	void display();
+	void save();
+	void load();
+	vector<Entity> entities;
+private:
+	int width;
+	int height;
+	vector<vector<char>> board;
+};
 
 // Board
 char board[HEIGHT][WIDTH];
