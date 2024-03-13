@@ -106,147 +106,184 @@ int main() {
 	Board board(board_width, board_height);
 
 
-	int input;
-	
-	populate(board);
-	display(board);
+	int x = board_width / 2, y = board_height / 2;
+	Entity player(x, y);
 
+	board.entities = { player };
+	
+	board.display();
+	
 	while (true) {
-		input = _getch();
-		switch (input)
-		{
+        for (int i = 0; i < board.entities.size(); i++) {
+            Pos p = board.entities[i].get_pos();
+            std::cout << "e[" << i << "]: x: " << p.y << ", y: " << p.y << std::endl;
+        }
+
+        std::cout << "Waiting for input" << std::endl;
+		while (!_kbhit()) {}; // Wait for keypress
+
+		Pos player_pos = player.get_pos();
+        std::string msg;
+		switch (_getch()) {
 		case UP:
-			y--;
+            msg = "up pressed";
+			player_pos.y--;
 			break;
 		case DOWN:
-			y++;
+            msg = "down pressed";
+			player_pos.y++;
 			break;
 		case LEFT:
-			x--;
+            msg = "left pressed";
+			player_pos.x--;
 			break;
 		case RIGHT:
-			x++;
+            msg = "right pressed";
+			player_pos.x++;
+			break;
+		case SAVE:
+			board.save();
+			break;
+		case LOAD:
+			board.load();
 			break;
 		case QUIT:
 			exit(0);
-		case SAVE:
-			save();
-			break;
-		case LOAD:
-			load();
-			break;
 		default:
+            msg = "default";
 			break;
 		}
 
-		if (y < 0)
-			y = 0;
-		if (y > HEIGHT - 1)
-			y = HEIGHT - 1;
+		if (player_pos.y < 0)
+			player_pos.y = 0;
+		if (player_pos.y > board_height - 1)
+			player_pos.y = board_height - 1;
 
-		if (x < 0)
-			x = 0;
-		if (x > WIDTH - 1)
-			x = WIDTH - 1;
+		if (player_pos.x < 0)
+			player_pos.x = 0;
+		if (player_pos.x > board_width - 1)
+			player_pos.x = board_width - 1;
+        msg += "\nnew pos: x: " + std::to_string(player_pos.x) + ", y: " + std::to_string(player_pos.y);
 
-		display(board);
+		player.set_pos(player_pos);
+        board.entities = { player };
+
+		board.display();
+        std::cout << msg << std::endl;
 	}
 }
 
-void display(char board[HEIGHT][WIDTH]) {
-	system("cls");
-	for (int i = 0; i < HEIGHT; i++) {
-		for (int j = 0; j < WIDTH; j++) {
+void Board::save() {
+	// open the save file
+    output_file.open(save_directory + save_file);
+    if (output_file.fail()) {
+        std::cout << "Unable to write save file";
+        system("pause");
+        return;
+    }
 
-			if (i == y && j == x) {
-				cout << PLAYER;
-			}
-			else if (
-				pow(abs(i - y), 2) + pow(abs(j - x), 2) <= pow(PLAYER_VISION, 2)
-			) {
-				// Draw walls
-				if ((i == 0 && j == 0)
-					|| (i == 0 && j == WIDTH - 1)
-					|| (i == HEIGHT - 1 && j == 0)
-					|| (i == HEIGHT - 1 && j == WIDTH - 1)
-					) {
-					cout << '+';
-					continue;
-				}
-				if (i == 0 || i == HEIGHT - 1) {
-					cout << '-';
-					continue;
-				}
-				if (j == 0 || j == WIDTH - 1) {
-					cout << '|';
-					continue;
-				}
-				cout << board[i][j];
-			}
-			else {
-				cout << EMPTY;
-			}
-		}
-		cout << endl;
-	}
+    // almost the same as the display code, but writing
+    // to the save file instead of the console
+    Pos playerPos = this->entities[0].get_pos();
+    for (int i = 0; i < this->height; i++) {
+        for (int j = 0; j < this->width; j++) {
+            // place a 'P' where the player is
+            if (i == playerPos.y && j == playerPos.x) {
+                output_file << 'P';
+                continue;
+            }
+            output_file << this->board[i][j];
+        }
+        output_file << '\n';
+    }
+    output_file.close();
 }
 
-void populate(char board[HEIGHT][WIDTH]) {
-	for (int i = 0; i < HEIGHT; i++) {
-		for (int j = 0; j < WIDTH; j++) {
-			board[i][j] = '.';
-		}
-	}
+void Board::load() {
+	// open the save file
+    input_file.open(save_directory + save_file);
+    if (input_file.fail()) {
+        std::cout << "Unable to read save file";
+        system("pause");
+        return;
+    }
+
+    char input;
+    int i = 0, j = 0;
+    // read the input file, one character at a time
+    while (input_file >> input) {
+        // place the character into it's corresponding coordinates on the board
+        this->board[i][j] = input;
+
+        // found the player! update their x and y coordinates to match
+        if (input == 'P') {
+            // @todo : set position on player
+            // y = i;
+            // x = j;
+            this->board[i][j] = '.';
+        }
+
+        // move to the next column
+        j++;
+
+        // if finished with the row
+        if (j >= this->width) {
+            i++;   // go to the next row
+            j = 0; // and move back to the first column
+        }
+    }
+    // close out the file
+    input_file.close();
 }
 
-void save() {
-	// Open file
-	output_file.open(save_directory + save_file);
-	
-	for (int i = 0; i < HEIGHT; i++) {
-		for (int j = 0; j < WIDTH; j++) {
-			if (i == y && j == x) {
-				output_file << PLAYER;
-			}
-			else {
-				output_file << board[i][j];
-			}
-		}
-		output_file << endl;
-	}
+void Board::display()
+{
+    system("cls"); // clear the console
 
-	output_file.close();
-}
+    std::string buffer;
 
-void load() {
-	char input;
-	input_file.open(save_directory + save_file);
-	// TODO: Is this section unnecessary?
-	input_file.clear();
-	input_file.seekg(0);
-	if (input_file.fail()) {
-		cout << "Error reading file";
-		system("pause");
-		exit(1);
-	}
+    Pos player_pos = this->entities[0].get_pos();
 
-	int i = 0,
-		j = 0;
-	while (input_file >> input) {
-		if (input == PLAYER) {
-			y = i;
-			x = j;
-			board[i][j] = '.';
-		}
-		else {
-			board[i][j] = input;
-		}
-		j++;
-		if (j >= WIDTH) {
-			j = 0;
-			i++;
-		}
-	}
-	input_file.close();
-	display(board);
+    for (int i = 0; i < this->height; i++) {
+        for (int j = 0; j < this->width; j++) {
+
+            // print the player when i,j match the player's x,y
+            if (i == player_pos.y && j == player_pos.x) {
+                buffer += PLAYER;
+                // std::wcout << PLAYER_SPRITE;
+                continue;
+            }
+
+            // only draw if the current position is within "PLAYER_VISION" of the player's position
+            if ((abs(i - player_pos.y) + abs(j - player_pos.x)) <= PLAYER_VISION) {
+                if ((i == 0 && j == 0)
+                    || (i == 0 && j == this->width - 1)
+                    || (i == this->height - 1 && j == 0)
+                    || (i == this->height - 1 && j == this->width - 1)) {
+                    // std::cout << '+';
+                    buffer += '+';
+                    continue;
+                }
+                if (j == 0 || j == this->width - 1) {
+                    // std::cout << '|';
+                    buffer += '|';
+                    continue;
+                }
+                if (i == 0 || i == this->height - 1) {
+                    // std::cout << '-';
+                    buffer += '-';
+                    continue;
+                }
+                // std::cout << board[i][j];
+                buffer += board[i][j];
+            }
+            else {
+                // std::cout << EMPTY;
+                buffer += EMPTY;
+            }
+        }
+        // std::cout << '\n';
+        buffer += '\n';
+    }
+    std::cout << buffer << std::flush;
 }
