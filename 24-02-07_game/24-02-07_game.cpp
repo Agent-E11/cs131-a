@@ -91,19 +91,21 @@ private:
 	vector<vector<char>> board;
 };
 
-// Board
-char board[HEIGHT][WIDTH];
-
-// Player coords
-int x = WIDTH / 2, y = HEIGHT / 2;
-
-// Functions
-void display(char board[HEIGHT][WIDTH]);
-void populate(char board[HEIGHT][WIDTH]);
-void save();
-void load();
-
 int main() {
+	std::locale::global(std::locale("en_US.utf-8"));
+
+	int board_width, board_height;
+	std::cout << "Input board width (0 = default): ";
+	std::cin >> board_width;
+	if (board_width == 0) board_width = WIDTH;
+
+	std::cout << "Input board height (0 = default): ";
+	std::cin >> board_height;
+	if (board_height == 0) board_width = WIDTH;
+
+	Board board(board_width, board_height);
+
+
 	int input;
 	
 	populate(board);
