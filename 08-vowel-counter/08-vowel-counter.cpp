@@ -8,7 +8,7 @@
 /// Counts the number of vowels in a word
 /// </summary>
 /// <param name="word">A single word</param>
-/// <returns>The number of vowels in the word. Returns -1 if there was an error</returns>
+/// <returns>The number of vowels in the word. -1 if there was an error</returns>
 static int count_vowels(std::string word) {
 	const char vowels[] = { 'a', 'e', 'i', 'o', 'u' };
 	int count = 0;

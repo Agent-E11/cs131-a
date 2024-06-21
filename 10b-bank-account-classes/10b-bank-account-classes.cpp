@@ -43,10 +43,10 @@ int main() {
     char choice;
 	std::vector<BankAcct> accts;
 
-    BankAcct wecu("WECU", 0.0);
-    BankAcct icu("ICU", 0.0);
+    BankAcct wecu("wecu", 250.0);
+    BankAcct icu("icu", 65.0);
 	BankAcct becu;
-	becu.name = "BECU";
+	becu.name = "becu";
 	becu.deposit(100);
     accts.push_back(wecu);
     accts.push_back(icu);
@@ -82,7 +82,17 @@ int main() {
 
 			// Get name
 			std::cout << "Name of new account: ";
-			std::cin >> new_acct.name;
+			std::cin >> name1;
+
+			pos = find_account(accts, name1);
+
+			if (pos != -1) {
+				msg = std::format("Account with name `{}` already exists", name1);
+				break;
+			}
+
+			// Set name
+			new_acct.name = name1;
 
 			// Get starting balance
 			std::cout << "Starting balance: $";
